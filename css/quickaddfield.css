@@ -1,0 +1,61 @@
+#right .quickAddHolder{
+	width: 450px;
+	border: 1px solid #ddd;
+	background: #f9f9f9;
+	padding: 10px;	
+	margin: 10px 0;
+}
+	#right .quickAddHolder .field.quickadd label.left{
+		font-size: 14px;
+		font-weight: bold;
+		margin-left: 3px;
+	}
+	#right .quickAddHolder .field.quickadd .middleColumn{
+		margin-top: 10px;
+		background: none;
+	}
+		#right .quickAddHolder .field.quickadd .middleColumn ul.optionset {
+			margin: 0;
+			border: 1px solid #ddd;
+			background: #efefef;
+			padding: 5px;			
+		}
+			#right .quickAddHolder .field.quickadd .middleColumn ul.optionset li{
+				display: inline-block;
+				width: 185px;
+				padding: 7px 10px;
+				margin: 0;
+			}
+			#right .quickAddHolder .field.quickadd .middleColumn ul.optionset li.odd{
+				
+			}
+				#right .quickAddHolder .field.quickadd .middleColumn ul.optionset li input{
+					padding-top: 4px;
+				}
+				#right .quickAddHolder .field.quickadd .middleColumn ul.optionset li label{
+					font-size: 13px;
+					line-height: 18px;
+				}
+	#right .quickAddHolder .fieldgroup.nolabel .middleColumn{
+		background: none;
+		margin-top: 10px;
+	}
+		#right .quickAddHolder .fieldgroup.nolabel .middleColumn .fieldgroupField input.text{
+			font-size: 13px;
+			padding: 3px 10px;
+			border-right: none;
+			margin-left: 10px;
+			width: 240px;
+		}
+		#right .quickAddHolder .fieldgroup.nolabel .middleColumn .fieldgroupField a{
+			font-size: 13px;
+			padding: 3px 30px;
+			background: #57a446;
+			color: #fff;
+			text-decoration: none;
+			border: 1px solid #22710c;
+			font-weight: bold;
+		}
+			#right .quickAddHolder .fieldgroup.nolabel .middleColumn .fieldgroupField a:hover{
+				background: #77c466;
+			}
