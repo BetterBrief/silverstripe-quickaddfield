@@ -48,8 +48,8 @@
 						$new.children('label').attr('for',$options.attr('id') + '_' + data.ID).text(data.Title);
 					}
 					$options.append($new);
-					$quickAddInput.val('');
 				}
+				$quickAddInput.val('');
 			},
 			url: $this.closest('form').attr('action') + '/field/' + fieldName + '/findOrAdd'
 		});
