@@ -9,29 +9,31 @@ class QuickAddField extends CheckboxSetField {
 		$addTitle = 'Create new',
 		$className,
 		$field,
-		$defaultsProperties;
+		$defaultsProperties,
+		$selectAll = true;
 
 	function __construct(DataObject $controller,$name,$title = null,$className = null,$source = array(),$addTitle = null,$defaultsProperties = array(), $form = null) {
 		if (!$title) {
 			$this->title = self::name_to_label($name);
 		}
 		if (!$className) {
-			if ($className = $controller->has_one($name) || $className = $controller->belongs_to($name)) {
-				$this->fieldType = 'OptionsetField';
-			}
-			elseif ($settings = $controller->has_many($name)) {
-				$className = $settings[1];
-			}
-			elseif ($settings = $controller->many_many($name)) {
+			if ((!$className = $controller->has_one($name)) && (!$className = $controller->belongs_to($name)) && (($settings = $controller->has_many($name)) || ($settings = $controller->many_many($name)))) {
 				$className = $settings[1];
 			}
 			else {
 				trigger_error('Couldn\'t determine class type');
 			}
 		}
+		elseif (!class_exists($className)) {
+			trigger_error($className . ' class doesn\'t exist');
+		}
 		$this->setDefaults($defaultsProperties);
 		$this->className = $className;
 		parent::__construct($name,$title,$source,null,$form);
+	}
+
+	function setSelectAll(bool $val) {
+		$this->selectAll = $val;
 	}
 
 	function setDefaults($defaults = array()) {
@@ -69,7 +71,11 @@ class QuickAddField extends CheckboxSetField {
 		Requirements::CSS(MOD_QA_DIR .'/css/quickaddfield.css');
 
 		if ($this->fieldType == 'CheckboxSetField') {
-			return parent::Field();
+			$selectAll = '';
+			if ($this->selectAll) {
+				$selectAll = '<a class="selectAll" href="#">Select All</a>';
+			}
+			return $selectAll . parent::Field();
 		}
 		return OptionsetField::Field();
 	}

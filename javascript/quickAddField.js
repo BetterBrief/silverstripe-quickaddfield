@@ -60,4 +60,8 @@
 			$(this).parent().next().find('a.quickadd').click();
 		}
 	});
+	$('div.quickAddHolder a.selectAll').live('click',function() {
+		$('input:not(:checked)',$(this).siblings('ul.optionset')).click();
+		return false;
+	});
 })(jQuery)
