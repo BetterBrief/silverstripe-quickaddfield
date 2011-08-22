@@ -8,9 +8,10 @@ class QuickAddField extends CheckboxSetField {
 		$fieldType = 'CheckboxSetField',
 		$addTitle = 'Create new',
 		$className,
-		$field;
+		$field,
+		$defaultsProperties;
 
-	function __construct(DataObject $controller,$name,$title = null,$className = null,$source = array(),$addTitle = null,$form = null) {
+	function __construct(DataObject $controller,$name,$title = null,$className = null,$source = array(),$addTitle = null,$defaultsProperties = array(), $form = null) {
 		if (!$title) {
 			$this->title = self::name_to_label($name);
 		}
@@ -28,8 +29,21 @@ class QuickAddField extends CheckboxSetField {
 				trigger_error('Couldn\'t determine class type');
 			}
 		}
+		$this->setDefaults($defaultsProperties);
 		$this->className = $className;
 		parent::__construct($name,$title,$source,null,$form);
+	}
+
+	function setDefaults($defaults = array()) {
+		$this->defaultsProperties = $defaults;
+	}
+
+	function mergeDefaults($defaults = array()) {
+		$this->defaultsProperties = array_merge($this->defaultsProperties,$defaults);
+	}
+
+	function setDefault($name,$val) {
+		$this->defaultsProperties[$name] = $val;
 	}
 
 	function setAddTitle($val) {
@@ -37,7 +51,7 @@ class QuickAddField extends CheckboxSetField {
 	}
 
 	function getSource() {
-		if (!$this->source) {
+		if (is_array($this->source) && !$this->source) {
 			$this->source = DataObject::get($this->className);
 			if (!$this->source) {
 				$this->source = array();
@@ -73,7 +87,7 @@ class QuickAddField extends CheckboxSetField {
 	function findOrAdd($request) {
 		if ($title = $request->getVar('Title')) {
 			if (!$obj = DataObject::get_one($this->className,$this->labelField . " = '" . Convert::raw2sql($title) . "'")) {
-				$obj = new $this->className();
+				$obj = new $this->className($this->defaultsProperties);
 				$obj->{$this->labelField} = $title;
 				$obj->write();
 			}
