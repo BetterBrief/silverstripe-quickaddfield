@@ -1,5 +1,8 @@
 (function($) {
 	$quickAddInput = $('input.quickadd');
+	function getURL($obj,fieldName,action) {
+		return $obj.closest('form').attr('action') + '/field/' + fieldName + '/' + action
+	}
 	$('a.quickadd').live('click',function() {
 		var $this = $(this),
 			$holder = $this.closest('div.quickAddHolder'),
@@ -51,7 +54,7 @@
 				}
 				$quickAddInput.val('');
 			},
-			url: $this.closest('form').attr('action') + '/field/' + fieldName + '/findOrAdd'
+			url: getURL($this,fieldName,'findOrAdd')
 		});
 		return false;
 	});
@@ -63,5 +66,100 @@
 	$('div.quickAddHolder a.selectAll').live('click',function() {
 		$('input:not(:checked)',$(this).siblings('ul.optionset')).click();
 		return false;
+	});
+	$('.quickadd li').live('hover',function() {
+		var $this = $(this),
+			$input = $this.children('input'),
+			fieldName = $this.closest('div.quickAddHolder').children('div.quickadd:first').attr('id');
+		if (!$this.children('a').length) {
+			var $edit = $('<a class="edit" href="#">Edit</a>'),
+				$delete = $('<a class="delete" href="#">Delete</a>');
+			$delete.click(function() {
+				if (confirm('Are you sure you want to delete this ' + $('#tab-' + $this.closest('.tab').attr('id')).html() + ' from ALL Directory Items')) {
+					$.ajax({
+						beforeSend: function(XHR,settings) {
+							if ($delete.data('inProgress')) {
+								return false;
+							}
+							$delete.data('inProgress',true);
+						},
+						complete: function(XHR,textStatus) {
+							$delete.data('inProgress',false);
+						},
+						data: {'ID': $input.val()},
+						dataType: 'json',
+						error: function(XHR,textStatus,errorThrown) {
+						},
+						success: function(data,textStatus,XHR) {
+							if (data.success == 1) {
+								$this.fadeOut('slow',function() {
+									$this.remove();
+								});
+							}
+						},
+						url: getURL($this,fieldName,'delete')
+					});
+				}
+				return false;
+			});
+			$edit.click(function() {
+				var $label = $input.siblings('label'),
+					$editLabel = $('<input class="inlineEdit" value="' + $label.html() + '">');
+				$editLabel.blur(function() {
+					if ($editLabel.val() && $label.html() != $editLabel.val()) {
+						$label.html($editLabel.val());
+						$.ajax({
+							beforeSend: function(XHR,settings) {
+								if ($edit.data('inProgress')) {
+									return false;
+								}
+								$edit.data('inProgress',true).addClass('loading');
+								$editLabel.attr('disabled','disabled');
+							},
+							complete: function(XHR,textStatus) {
+								$edit.data('inProgress',false).removeClass('loading');
+							},
+							data: {
+								'ID': $input.val(),
+								'Title': $editLabel.val()
+							},
+							dataType: 'json',
+							error: function(XHR,textStatus,errorThrown) {
+							},
+							success: function(data,textStatus,XHR) {
+								if (data.success == 1) {
+									$label.html(data.Title);
+									$editLabel.replaceWith($label);
+								}
+								else {
+									$editLabel.attr('disabled','').focus();
+								}
+							},
+							url: getURL($this,fieldName,'edit')
+						});
+					}
+					else {
+						$editLabel.replaceWith($label);
+					}
+				}).keypress(function(e) {
+					if (e.keyCode == 13) {
+						$editLabel.blur();
+					};
+				});
+				$(document).keyup(function(e) {
+					if (e.keyCode == 27) {
+						$editLabel.replaceWith($label);
+					}
+				})
+				$label.replaceWith($editLabel);
+				$editLabel.focus();
+				return false;
+			});
+			$this.append($edit).append($delete);
+		}
+		else {
+			var $edit = $this.children('a.edit'),
+				$delete = $this.children('a.delete');
+		}
 	});
 })(jQuery)

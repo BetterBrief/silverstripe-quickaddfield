@@ -104,4 +104,36 @@ class QuickAddField extends CheckboxSetField {
 		}
 	}
 
+	function delete($request) {
+		$id = $request->getVar('ID');
+		$success = 0;
+		// If request id is non falsey
+		if ($id > 0 && is_numeric($id) && $id == (int)$id) {
+			// Grab object if it exists
+			if ($obj = DataObject::get_by_id($this->className,$id)) {
+				// Delete object
+				$obj->delete();
+				$success = 1;
+			}
+		}
+		return '{"success":' . $success . '}';
+	}
+
+	function edit($request) {
+		$id = $request->getVar('ID');
+		$content = $request->getVar('Title');
+		$json = array('success' => 0);
+		// If request id is non falsey
+		if ($content && $id > 0 && is_numeric($id) && $id == (int)$id) {
+			if ($obj = DataObject::get_by_id($this->className,$id)) {
+				// Change title to new given title
+				$obj->{$this->labelField} = $content;
+				$obj->write();
+				$json['Title'] = $obj->{$this->labelField};
+				$json['success'] = 1;
+			}
+		}
+		return Convert::array2json($json);
+	}
+
 }

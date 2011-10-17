@@ -2,7 +2,7 @@
 	width: 450px;
 	border: 1px solid #ddd;
 	background: #f9f9f9;
-	padding: 10px;	
+	padding: 10px;
 	margin: 10px 0;
 }
 	#right .quickAddHolder .field.quickadd label.left{
@@ -18,16 +18,45 @@
 			margin: 0;
 			border: 1px solid #ddd;
 			background: #efefef;
-			padding: 5px;			
+			padding: 5px;
 		}
 			#right .quickAddHolder .field.quickadd .middleColumn ul.optionset li{
 				display: inline-block;
-				width: 185px;
-				padding: 7px 10px;
+				width: 145px;
+				padding: 7px 50px 7px 10px;
 				margin: 0;
+				position:relative;
+			}
+			#right .quickAddHolder .field.quickadd .middleColumn ul.optionset li a {
+				display:none;
+				position:absolute;
+				top: 7px;
+				right: 10px;
+				width:16px;
+				height:16px;
+				text-indent:-999em;
+				overflow:hidden;
+				background:transparent url(../../cms/images/delete.gif) top right no-repeat;
+			}
+				#right .quickAddHolder .field.quickadd .middleColumn ul.optionset li a.edit {
+					background-image: url(../../cms/images/edit.gif);
+					right: 30px;
+				}
+				#right .quickAddHolder .field.quickadd .middleColumn ul.optionset li a.loading {
+					background-image: url(../../cms/images/network-save.gif);
+					display:block;
+				}
+				#right .quickAddHolder .field.quickadd .middleColumn ul.optionset li .inlineEdit {
+					font-size:13px;
+					width:115px;
+				}
+				#right .quickAddHolder .field.quickadd .middleColumn ul.optionset li .inlineEdit[disabled] {
+					background-color:#EFEFEF;
+				}
+			#right .quickAddHolder .field.quickadd .middleColumn ul.optionset li:hover a {
+				display:block;
 			}
 			#right .quickAddHolder .field.quickadd .middleColumn ul.optionset li.odd{
-				
 			}
 				#right .quickAddHolder .field.quickadd .middleColumn ul.optionset li input{
 					padding-top: 4px;
