@@ -1,7 +1,10 @@
 (function($) {
 	$quickAddInput = $('input.quickadd');
 	function getURL($obj,fieldName,action) {
-		return $obj.closest('form').attr('action') + '/field/' + fieldName + '/' + action
+		var formActionArray = $obj.closest('form').attr('action').split('?'),
+			formAction = formActionArray[0],
+			qryString = formActionArray[1] ? '?' + formActionArray[1] : '';
+		return formAction + '/field/' + fieldName + '/' + action + qryString;
 	}
 	$('a.quickadd').live('click',function() {
 		var $this = $(this),
@@ -25,34 +28,36 @@
 			error: function(XHR,textStatus,errorThrown) {
 			},
 			success: function(data,textStatus,XHR) {
-				var $input = $inputs.filter('[value="' + data.ID + '"]');
-				if ($input.length) {
-					if (!$input.is(':checked')) {
-						$input.click();
-					}
-				}
-				else {
-					if (!$inputs.length) {
-						var inputType = $options.hasClass('checkboxsetfield') ? 'checkbox' : 'radio',
-							$new = $('<li class="val' + data.ID + ' odd"><input type="' + inputType + '" id="' + $options.attr('id') + '_' + data.ID + '" name="' + fieldName + '[' + data.ID + ']' + '" value="' + data.ID + '" checked="checked" /><label for="' + $options.attr('id') + '_' + data.ID + '">' + data.Title + '</label></li>');
-						$options.children().remove();
+				if (data) {
+					var $input = $inputs.filter('[value="' + data.ID + '"]');
+					if ($input.length) {
+						if (!$input.is(':checked')) {
+							$input.click();
+						}
 					}
 					else {
-						var $new = $options.children(':last').clone(),
-							val = $new.val();
-						$new.removeClass('val' + val).addClass('val' + data.ID);
-						if ($new.hasClass('even')) {
-							$new.removeClass('even').addClass('odd');
+						if (!$inputs.length) {
+							var inputType = $options.hasClass('checkboxsetfield') ? 'checkbox' : 'radio',
+								$new = $('<li class="val' + data.ID + ' odd"><input type="' + inputType + '" id="' + $options.attr('id') + '_' + data.ID + '" name="' + fieldName + '[' + data.ID + ']' + '" value="' + data.ID + '" checked="checked" /><label for="' + $options.attr('id') + '_' + data.ID + '">' + data.Title + '</label></li>');
+							$options.children().remove();
 						}
 						else {
-							$new.addClass('even').removeClass('odd');
+							var $new = $options.children(':last').clone(),
+								val = $new.val();
+							$new.removeClass('val' + val).addClass('val' + data.ID);
+							if ($new.hasClass('even')) {
+								$new.removeClass('even').addClass('odd');
+							}
+							else {
+								$new.addClass('even').removeClass('odd');
+							}
+							$new.children('input').attr('id',$options.attr('id') + '_' + data.ID).attr('name',fieldName + '[' + data.ID + ']').val(data.ID).attr('checked','checked');
+							$new.children('label').attr('for',$options.attr('id') + '_' + data.ID).text(data.Title);
 						}
-						$new.children('input').attr('id',$options.attr('id') + '_' + data.ID).attr('name',fieldName + '[' + data.ID + ']').val(data.ID).attr('checked','checked');
-						$new.children('label').attr('for',$options.attr('id') + '_' + data.ID).text(data.Title);
+						$options.append($new);
 					}
-					$options.append($new);
+					$quickAddInput.val('');
 				}
-				$quickAddInput.val('');
 			},
 			url: getURL($this,fieldName,'findOrAdd')
 		});
@@ -61,6 +66,7 @@
 	$quickAddInput.live('keypress',function(e) {
 		if (e.keyCode == 13) {
 			$(this).parent().next().find('a.quickadd').click();
+			e.preventDefault();
 		}
 	});
 	$('div.quickAddHolder a.selectAll').live('click',function() {
@@ -71,11 +77,11 @@
 		var $this = $(this),
 			$input = $this.children('input'),
 			fieldName = $this.closest('div.quickAddHolder').children('div.quickadd:first').attr('id');
-		if (!$this.children('a').length) {
+		if ($this[0].className && !$this.children('a').length) {
 			var $edit = $('<a class="edit" href="#">Edit</a>'),
 				$delete = $('<a class="delete" href="#">Delete</a>');
 			$delete.click(function() {
-				if (confirm('Are you sure you want to delete this ' + $('#tab-' + $this.closest('.tab').attr('id')).html() + ' from ALL Directory Items')) {
+				if (confirm('Are you sure you want to delete this function tag from ALL Directory Items?')) {
 					$.ajax({
 						beforeSend: function(XHR,settings) {
 							if ($delete.data('inProgress')) {
@@ -86,7 +92,7 @@
 						complete: function(XHR,textStatus) {
 							$delete.data('inProgress',false);
 						},
-						data: {'ID': $input.val()},
+						data: {'Id': $input.val()},
 						dataType: 'json',
 						error: function(XHR,textStatus,errorThrown) {
 						},
@@ -120,7 +126,7 @@
 								$edit.data('inProgress',false).removeClass('loading');
 							},
 							data: {
-								'ID': $input.val(),
+								'Id': $input.val(),
 								'Title': $editLabel.val()
 							},
 							dataType: 'json',
@@ -144,6 +150,7 @@
 				}).keypress(function(e) {
 					if (e.keyCode == 13) {
 						$editLabel.blur();
+						e.preventDefault();
 					};
 				});
 				$(document).keyup(function(e) {

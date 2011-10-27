@@ -32,6 +32,10 @@ class QuickAddField extends CheckboxSetField {
 		parent::__construct($name,$title,$source,null,$form);
 	}
 
+	function setLabelField($var) {
+		$this->labelField = $var;
+	}
+
 	function setSelectAll(bool $val) {
 		$this->selectAll = $val;
 	}
@@ -105,7 +109,7 @@ class QuickAddField extends CheckboxSetField {
 	}
 
 	function delete($request) {
-		$id = $request->getVar('ID');
+		$id = $request->getVar('Id');
 		$success = 0;
 		// If request id is non falsey
 		if ($id > 0 && is_numeric($id) && $id == (int)$id) {
@@ -120,7 +124,7 @@ class QuickAddField extends CheckboxSetField {
 	}
 
 	function edit($request) {
-		$id = $request->getVar('ID');
+		$id = $request->getVar('Id');
 		$content = $request->getVar('Title');
 		$json = array('success' => 0);
 		// If request id is non falsey

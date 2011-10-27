@@ -1,33 +1,33 @@
-#right .quickAddHolder{
-	width: 450px;
+.quickAddHolder{
+	width: 95%;
 	border: 1px solid #ddd;
 	background: #f9f9f9;
 	padding: 10px;
 	margin: 10px 0;
 }
-	#right .quickAddHolder .field.quickadd label.left{
+	.quickAddHolder .field.quickadd label.left{
 		font-size: 14px;
 		font-weight: bold;
 		margin-left: 3px;
 	}
-	#right .quickAddHolder .field.quickadd .middleColumn{
+	.quickAddHolder .field.quickadd .middleColumn{
 		margin-top: 10px;
 		background: none;
 	}
-		#right .quickAddHolder .field.quickadd .middleColumn ul.optionset {
+		.quickAddHolder .field.quickadd .middleColumn ul.optionset {
 			margin: 0;
 			border: 1px solid #ddd;
 			background: #efefef;
 			padding: 5px;
 		}
-			#right .quickAddHolder .field.quickadd .middleColumn ul.optionset li{
+			.quickAddHolder .field.quickadd .middleColumn ul.optionset li{
 				display: inline-block;
 				width: 145px;
 				padding: 7px 50px 7px 10px;
 				margin: 0;
 				position:relative;
 			}
-			#right .quickAddHolder .field.quickadd .middleColumn ul.optionset li a {
+			.quickAddHolder .field.quickadd .middleColumn ul.optionset li a {
 				display:none;
 				position:absolute;
 				top: 7px;
@@ -38,45 +38,45 @@
 				overflow:hidden;
 				background:transparent url(../../cms/images/delete.gif) top right no-repeat;
 			}
-				#right .quickAddHolder .field.quickadd .middleColumn ul.optionset li a.edit {
+				.quickAddHolder .field.quickadd .middleColumn ul.optionset li a.edit {
 					background-image: url(../../cms/images/edit.gif);
 					right: 30px;
 				}
-				#right .quickAddHolder .field.quickadd .middleColumn ul.optionset li a.loading {
+				.quickAddHolder .field.quickadd .middleColumn ul.optionset li a.loading {
 					background-image: url(../../cms/images/network-save.gif);
 					display:block;
 				}
-				#right .quickAddHolder .field.quickadd .middleColumn ul.optionset li .inlineEdit {
+				.quickAddHolder .field.quickadd .middleColumn ul.optionset li .inlineEdit {
 					font-size:13px;
 					width:115px;
 				}
-				#right .quickAddHolder .field.quickadd .middleColumn ul.optionset li .inlineEdit[disabled] {
+				.quickAddHolder .field.quickadd .middleColumn ul.optionset li .inlineEdit[disabled] {
 					background-color:#EFEFEF;
 				}
-			#right .quickAddHolder .field.quickadd .middleColumn ul.optionset li:hover a {
+			.quickAddHolder .field.quickadd .middleColumn ul.optionset li:hover a {
 				display:block;
 			}
-			#right .quickAddHolder .field.quickadd .middleColumn ul.optionset li.odd{
+			.quickAddHolder .field.quickadd .middleColumn ul.optionset li.odd{
 			}
-				#right .quickAddHolder .field.quickadd .middleColumn ul.optionset li input{
+				.quickAddHolder .field.quickadd .middleColumn ul.optionset li input{
 					padding-top: 4px;
 				}
-				#right .quickAddHolder .field.quickadd .middleColumn ul.optionset li label{
+				.quickAddHolder .field.quickadd .middleColumn ul.optionset li label{
 					font-size: 13px;
 					line-height: 18px;
 				}
-	#right .quickAddHolder .fieldgroup.nolabel .middleColumn{
+	.quickAddHolder .fieldgroup.nolabel .middleColumn{
 		background: none;
 		margin-top: 10px;
 	}
-		#right .quickAddHolder .fieldgroup.nolabel .middleColumn .fieldgroupField input.text{
+		.quickAddHolder .fieldgroup.nolabel .middleColumn .fieldgroupField input.text{
 			font-size: 13px;
 			padding: 3px 10px;
 			border-right: none;
 			margin-left: 10px;
 			width: 240px;
 		}
-		#right .quickAddHolder .fieldgroup.nolabel .middleColumn .fieldgroupField a{
+		.quickAddHolder .fieldgroup.nolabel .middleColumn .fieldgroupField a{
 			font-size: 13px;
 			padding: 3px 30px;
 			background: #57a446;
@@ -85,6 +85,6 @@
 			border: 1px solid #22710c;
 			font-weight: bold;
 		}
-			#right .quickAddHolder .fieldgroup.nolabel .middleColumn .fieldgroupField a:hover{
+			.quickAddHolder .fieldgroup.nolabel .middleColumn .fieldgroupField a:hover{
 				background: #77c466;
 			}
