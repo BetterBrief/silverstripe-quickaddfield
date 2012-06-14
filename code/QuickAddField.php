@@ -191,7 +191,7 @@ class QuickAddField extends OptionsetField {
 		$respond = '';
 		// If request id is non falsey
 		if ($content && $id > 0 && is_numeric($id) && $id == (int)$id) {
-			if ($obj = DataObject::get_by_id($this->className,$id) && !DataObject::get_one($this->className,$this->labelField . " = '" . Convert::raw2sql($content) . "' AND ID != " . $id)) {
+			if (($obj = DataObject::get_by_id($this->className,$id)) && !DataObject::get_one($this->className,$this->labelField . " = '" . Convert::raw2sql($content) . "' AND ID != " . $id)) {
 				// Change title to new given title
 				$obj->{$this->labelField} = $content;
 				$obj->write();
