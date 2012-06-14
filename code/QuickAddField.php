@@ -1,34 +1,49 @@
 <?php
 
-class QuickAddField extends CheckboxSetField {
+class QuickAddField extends OptionsetField {
 
 	protected
+		$controller,
 		$labelField = 'Title',
 		$idField = 'ID',
-		$fieldType = 'CheckboxSetField',
+		$fieldType = 'OptionSetField',
 		$addTitle = 'Create new',
 		$className,
 		$field,
 		$defaultsProperties,
-		$selectAll = true;
+		$selectAll = true,
+		$defaultItems = array();
 
 	function __construct(DataObject $controller,$name,$title = null,$className = null,$source = array(),$addTitle = null,$defaultsProperties = array(), $form = null) {
+		$hasOne = false;
 		if (!$title) {
 			$this->title = self::name_to_label($name);
 		}
 		if (!$className) {
-			if ((!$className = $controller->has_one($name)) && (!$className = $controller->belongs_to($name)) && (($settings = $controller->has_many($name)) || ($settings = $controller->many_many($name)))) {
-				$className = $settings[1];
+			if (substr($name,-2) == 'ID') {
+				$name = substr($name,0,-2);
 			}
-			else {
-				trigger_error('Couldn\'t determine class type');
+			if ((!$hasOne = $className = $controller->has_one($name)) && (!$className = $controller->belongs_to($name)) && (($settings = $controller->has_many($name)) || ($settings = $controller->many_many($name)))) {
+				if (is_array($settings)) {
+					$className = $settings[1];
+				} else {
+					$className = $settings;
+				}
+				$this->fieldType = 'CheckboxSetField';
+			}
+			if (!$className) {
+				trigger_error('Couldn\'t determine class type from field name "' . $name . '". Please define the class name.');
+			}
+			if ($hasOne) {
+				$name .= 'ID';
 			}
 		}
-		elseif (!class_exists($className)) {
+		if (!class_exists($className)) {
 			trigger_error($className . ' class doesn\'t exist');
 		}
 		$this->setDefaults($defaultsProperties);
 		$this->className = $className;
+		$this->controller = $controller;
 		parent::__construct($name,$title,$source,null,$form);
 	}
 
@@ -56,14 +71,60 @@ class QuickAddField extends CheckboxSetField {
 		$this->addTitle = $val;
 	}
 
+	function saveInto($record) {
+		if ($this->fieldType == 'CheckboxSetField') {
+			CheckboxSetField::saveInto($record);
+		}
+		else {
+			parent::saveInto($record);
+		}
+	}
+
+	function performDisabledTransformation() {
+		if ($this->fieldType == 'CheckboxSetField') {
+			CheckboxSetField::performDisabledTransformation();
+		}
+		else {
+			parent::performDisabledTransformation();
+		}
+	}
+
+	function performReadonlyTransformation() {
+		if ($this->fieldType == 'CheckboxSetField') {
+			CheckboxSetField::performReadonlyTransformation();
+		}
+		else {
+			parent::performReadonlyTransformation();
+		}
+	}
+
+	function dataValue() {
+		if ($this->fieldType == 'CheckboxSetField') {
+			return CheckboxSetField::dataValue();
+		}
+		return parent::dataValue();
+	}
+
 	function getSource() {
-		if (is_array($this->source) && !$this->source) {
+		if (is_array($this->source) && empty($this->source)) {
 			$this->source = DataObject::get($this->className);
 			if (!$this->source) {
 				$this->source = array();
 			}
+			elseif ($this->fieldType == 'OptionSetField') {
+				$this->source = $this->source->toDropdownMap($this->idField,$this->labelField);
+			}
 		}
 		return $this->source;
+	}
+
+	function setValue($value,$obj = null) {
+		if ($this->fieldType == 'CheckboxSetField') {
+			CheckboxSetField::setValue($value,$obj);
+		}
+		else {
+			parent::setValue($value);
+		}
 	}
 
 	function Field() {
@@ -79,9 +140,9 @@ class QuickAddField extends CheckboxSetField {
 			if ($this->selectAll) {
 				$selectAll = '<a class="selectAll" href="#">Select All</a>';
 			}
-			return $selectAll . parent::Field();
+			return $selectAll . CheckboxSetField::Field();
 		}
-		return OptionsetField::Field();
+		return parent::Field();
 	}
 
 	function FieldHolder() {
@@ -127,9 +188,10 @@ class QuickAddField extends CheckboxSetField {
 		$id = $request->getVar('Id');
 		$content = $request->getVar('Title');
 		$json = array('success' => 0);
+		$respond = '';
 		// If request id is non falsey
 		if ($content && $id > 0 && is_numeric($id) && $id == (int)$id) {
-			if ($obj = DataObject::get_by_id($this->className,$id)) {
+			if ($obj = DataObject::get_by_id($this->className,$id) && !DataObject::get_one($this->className,$this->labelField . " = '" . Convert::raw2sql($content) . "' AND ID != " . $id)) {
 				// Change title to new given title
 				$obj->{$this->labelField} = $content;
 				$obj->write();

@@ -12,7 +12,8 @@
 			$options = $('ul.optionset',$holder),
 			$inputs = $('input',$options),
 			fieldName = $holder.children('div.quickadd:first').attr('id'),
-			$quickAddInput = $this.parent().prev().find('input.quickadd');
+			$quickAddInput = $this.parent().prev().find('input.quickadd'),
+			inputType = $options.hasClass('checkboxsetfield') ? 'checkbox' : 'radio';
 		$.ajax({
 			beforeSend: function(XHR,settings) {
 				if ($this.data('inProgress')) {
@@ -29,7 +30,8 @@
 			},
 			success: function(data,textStatus,XHR) {
 				if (data) {
-					var $input = $inputs.filter('[value="' + data.ID + '"]');
+					var $input = $inputs.filter('[value="' + data.ID + '"]'),
+						name = inputType == 'radio' ? fieldName : fieldName + '[' + data.ID + ']';
 					if ($input.length) {
 						if (!$input.is(':checked')) {
 							$input.click();
@@ -37,8 +39,7 @@
 					}
 					else {
 						if (!$inputs.length) {
-							var inputType = $options.hasClass('checkboxsetfield') ? 'checkbox' : 'radio',
-								$new = $('<li class="val' + data.ID + ' odd"><input type="' + inputType + '" id="' + $options.attr('id') + '_' + data.ID + '" name="' + fieldName + '[' + data.ID + ']' + '" value="' + data.ID + '" checked="checked" /><label for="' + $options.attr('id') + '_' + data.ID + '">' + data.Title + '</label></li>');
+							var $new = $('<li class="val' + data.ID + ' odd"><input type="' + inputType + '" id="' + $options.attr('id') + '_' + data.ID + '" name="' + name + '" value="' + data.ID + '" checked="checked" /><label for="' + $options.attr('id') + '_' + data.ID + '">' + data.Title + '</label></li>');
 							$options.children().remove();
 						}
 						else {
@@ -51,7 +52,8 @@
 							else {
 								$new.addClass('even').removeClass('odd');
 							}
-							$new.children('input').attr('id',$options.attr('id') + '_' + data.ID).attr('name',fieldName + '[' + data.ID + ']').val(data.ID).attr('checked','checked');
+							$new.children('a').remove();
+							$new.children('input').attr('id',$options.attr('id') + '_' + data.ID).attr('name',name).val(data.ID).attr('checked','checked');
 							$new.children('label').attr('for',$options.attr('id') + '_' + data.ID).text(data.Title);
 						}
 						$options.append($new);
@@ -81,7 +83,7 @@
 			var $edit = $('<a class="edit" href="#">Edit</a>'),
 				$delete = $('<a class="delete" href="#">Delete</a>');
 			$delete.click(function() {
-				if (confirm('Are you sure you want to delete this function tag from ALL Directory Items?')) {
+				if (confirm('Are you sure you want to delete this from items?')) {
 					$.ajax({
 						beforeSend: function(XHR,settings) {
 							if ($delete.data('inProgress')) {
@@ -113,7 +115,7 @@
 					$editLabel = $('<input class="inlineEdit" value="' + $label.html() + '">');
 				$editLabel.blur(function() {
 					if ($editLabel.val() && $label.html() != $editLabel.val()) {
-						$label.html($editLabel.val());
+						//$label.html($editLabel.val());
 						$.ajax({
 							beforeSend: function(XHR,settings) {
 								if ($edit.data('inProgress')) {
@@ -138,7 +140,7 @@
 									$editLabel.replaceWith($label);
 								}
 								else {
-									$editLabel.attr('disabled','').focus();
+									$editLabel.attr('disabled','').val($label.text()).focus();
 								}
 							},
 							url: getURL($this,fieldName,'edit')
