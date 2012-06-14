@@ -188,7 +188,6 @@ class QuickAddField extends OptionsetField {
 		$id = $request->getVar('Id');
 		$content = $request->getVar('Title');
 		$json = array('success' => 0);
-		$respond = '';
 		// If request id is non falsey
 		if ($content && $id > 0 && is_numeric($id) && $id == (int)$id) {
 			if (($obj = DataObject::get_by_id($this->className,$id)) && !DataObject::get_one($this->className,$this->labelField . " = '" . Convert::raw2sql($content) . "' AND ID != " . $id)) {
