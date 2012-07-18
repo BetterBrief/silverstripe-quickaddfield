@@ -38,6 +38,16 @@ class QuickAddField extends OptionsetField {
 				$name .= 'ID';
 			}
 		}
+		else {
+			if ($rels = $controller->has_many() + $controller->many_many()) {
+				foreach ($rels as $rel => $class) {
+					if ($class == $className || ClassInfo::is_subclass_of($class,$className)) {
+						$this->fieldType = 'CheckboxSetField';
+						break;
+					}
+				}
+			}
+		}
 		if (!class_exists($className)) {
 			trigger_error($className . ' class doesn\'t exist');
 		}
@@ -82,20 +92,16 @@ class QuickAddField extends OptionsetField {
 
 	function performDisabledTransformation() {
 		if ($this->fieldType == 'CheckboxSetField') {
-			CheckboxSetField::performDisabledTransformation();
+			return CheckboxSetField::performDisabledTransformation();
 		}
-		else {
-			parent::performDisabledTransformation();
-		}
+		return parent::performDisabledTransformation();
 	}
 
 	function performReadonlyTransformation() {
 		if ($this->fieldType == 'CheckboxSetField') {
-			CheckboxSetField::performReadonlyTransformation();
+			return CheckboxSetField::performReadonlyTransformation();
 		}
-		else {
-			parent::performReadonlyTransformation();
-		}
+		return parent::performReadonlyTransformation();
 	}
 
 	function dataValue() {
