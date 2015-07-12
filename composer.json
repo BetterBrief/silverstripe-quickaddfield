@@ -1,0 +1,17 @@
+{
+	"name": "betterbrief/silverstripe-quickaddfield",
+	"description": "An inline DataObject creater for SilverStripe CMS",
+	"type": "silverstripe-module",
+	"homepage": "http://github.com/BetterBrief/silverstripe-quickaddnew",
+	"license": "BSD-3-Clause",
+	"keywords": ["silverstripe", "framework"],
+	"authors": [
+		{
+			"name": "Dan Hensby <@dhensby>"
+		}
+	],
+	"require": {
+		"php": ">=5.3.3",
+		"silverstripe/cms": "~2.4"
+	}
+}
