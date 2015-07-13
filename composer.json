@@ -2,7 +2,7 @@
 	"name": "betterbrief/silverstripe-quickaddfield",
 	"description": "An inline DataObject creater for SilverStripe CMS",
 	"type": "silverstripe-module",
-	"homepage": "http://github.com/BetterBrief/silverstripe-quickaddnew",
+	"homepage": "http://github.com/BetterBrief/silverstripe-quickaddfield",
 	"license": "BSD-3-Clause",
 	"keywords": ["silverstripe", "framework"],
 	"authors": [
